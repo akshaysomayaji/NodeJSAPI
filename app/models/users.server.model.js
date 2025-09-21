@@ -136,4 +136,4 @@ mongoose.model('UserSchema', UserSchema);
 mongoose.model('UserPasswordSchema', UserPasswordSchema);
 mongoose.model('user_otp_schema', user_otp_schema);
 mongoose.model('userRolesSchema', userRolesSchema);
-mongoose.model('UserLoggedInLogSchema', user_login_log);
+mongoose.model('UserLoggedInLogSchema', user_login_log);\
