@@ -8,6 +8,6 @@ module.exports = function (app) {
     app.route('/api/user/get/:id').get(users.getuserdetails);
     app.route('/api/user/getall').get(users.getallusers);
     app.route('/api/user/add').post(users.adduser);
-    app.route('/api/user/edit').put(users.update);
-    app.route('/api/user/delete').put(users.delete);
+    app.route('/api/user/edit/:id').put(users.update);
+    app.route('/api/user/delete/:id').delete(users.delete);
 }

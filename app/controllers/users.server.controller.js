@@ -161,8 +161,8 @@ exports.getOnlineUsers = function (req, res, next) {
 
 exports.update = async (req, res, next) => {
     try {
-        const { _id } = req.body;
-        const response = await User.update({ _id }, req.body);
+        const { id } = req.params;
+        const response = await User.findByIdAndUpdate(id, req.body, { new: true });
         res.send({ users: [], success: true, msg: notification.getUser_notification_message('User004') });
     } catch (err) {
         res.send({ users: [], success: false, msg: notification.getUser_notification_message('User000'), err });
@@ -171,9 +171,8 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
     try {
-        const { _id } = req.body;
-        req.body.isActive = false;
-        const response = await User.update({ _id }, req.body);
+        const { id } = req.params;
+        const response = await User.findByIdAndUpdate(id, { isActive: false }, { new: true });
         res.send({ users: [], success: true, msg: notification.getUser_notification_message('User004') });
     } catch (err) {
         res.send({ users: [], success: false, msg: notification.getUser_notification_message('User000'), err });
