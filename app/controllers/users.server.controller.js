@@ -9,8 +9,8 @@ var config = require('../../config/config');
 
 
 exports.authenticate = async function (req, res, next) {
-    const { username, password } = req.body;
-    var user = await User.findOne({ $or: [{ username: username }, { email: req.body.email }], isActive: true });
+    const { mobile,email, password } = req.body;
+    var user = await User.findOne({ $or: [{ mobilenumber: mobile }, { email: email }], isActive: true });
     if (!user) {
         return res.send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth005') });
     }
@@ -25,14 +25,14 @@ exports.authenticate = async function (req, res, next) {
     await userLoginLogSchemaObj.save();
     const tokenObj = {
         id: user._id,
-        username: user.username,
+        email: user.email,
         sessionId: req.sessionId,
+        userrole: user.userrole
     };
     const token = jwt.sign(tokenObj, config.tokenSecret, { expiresIn: 60 * 60 });
     res.send({
         users: user._id,
-        txtFullName: user.firstname,
-        txtUsername: user.username,
+        txtFullName: user.fullname,
         success: true,
         response_message: '',
         token,
@@ -124,7 +124,7 @@ exports.getallusers = async function (req, res, next) {
 
 exports.adduser = async function (req, res, next) {
     try {
-        const user = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }], isActive: true });
+        const user = await User.findOne({ $or: [{ mobilenumber: req.body.mobilenumber }, { email: req.body.email }], isActive: true });
         if (user) {
             res.send({ 'users': [], success: false, msg: notification.getUser_notification_message('User000'), err: err });
         }

@@ -4,18 +4,14 @@ var mongoose = require('mongoose'),
 mongoose.Promise = global.Promise;
 
 var UserSchema = new Schema({
-    username: {
+    fullname: {
         type: String,
         trim: true,
-        unique: true,
-        required: true
+        unique: false,
+        required: false
     },
-    firstname: {
-        type: String,
-        required: true
-    },
-    lastname: { type: String },
-    email: {
+    mobilenumber: { type: Number, unique: true, required: false },
+    emailid: {
         type: String,
         trim: true,
         unique: true,
@@ -136,4 +132,4 @@ mongoose.model('UserSchema', UserSchema);
 mongoose.model('UserPasswordSchema', UserPasswordSchema);
 mongoose.model('user_otp_schema', user_otp_schema);
 mongoose.model('userRolesSchema', userRolesSchema);
-mongoose.model('UserLoggedInLogSchema', user_login_log);\
+mongoose.model('UserLoggedInLogSchema', user_login_log);

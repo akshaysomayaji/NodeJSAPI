@@ -1,5 +1,4 @@
-trigger:
-- main  # this pipeline will trigger on push to main branch
+ # this pipeline will trigger on push to main branch
 
 variables:
   nodeVersion: '18.x'  # set Node.js version
