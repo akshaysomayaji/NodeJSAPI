@@ -26,7 +26,7 @@ var sessiontimeout = 15 * 60;
 
 module.exports = {
     port: port,
-    db: 'mongodb://localhost/InvoiceDB',
+    db: 'mongodb://localhost/MMHDB',
     'secret': 'superawesome',
     tokenSecret: tokenSecret,
     smtp: smtpTransport,
