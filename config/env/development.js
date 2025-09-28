@@ -27,7 +27,7 @@ var sessiontimeout = 15 * 60;
 module.exports = {
     port: port,
     db: 'mongodb://localhost/MMHDB',
-    'secret': 'superawesome',
+    secret: 'superawesome',
     tokenSecret: tokenSecret,
     smtp: smtpTransport,
     domain: domain,
@@ -35,4 +35,15 @@ module.exports = {
     clientConfigObj: clientConfigObj,
     sessiondb: 'mongodb://localhost/SessionDb',
     sessiontimeout: sessiontimeout,
+    database: 'loizenaidb',
+    username: 'postgres',
+    password: '123',
+    host: 'localhost',
+    dialect: 'postgres',
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    }
 }

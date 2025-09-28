@@ -69,7 +69,7 @@ exports.forgotpassword = function (req, res, next) {
             }
         })
     } catch (err) {
-        res.send({ 'users': [], success: false, msg: notification.getUser_notification_message('User000'), err: err });
+        res.send({ 'users': [], success: false, msg: notification.getUser_notification_message('Us000'), err: err });
     }
 }
 
