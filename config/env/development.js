@@ -35,9 +35,9 @@ module.exports = {
     clientConfigObj: clientConfigObj,
     sessiondb: 'mongodb://localhost/SessionDb',
     sessiontimeout: sessiontimeout,
-    database: 'loizenaidb',
+    database: 'MMHDB',
     username: 'postgres',
-    password: '123',
+    password: '123456',
     host: 'localhost',
     dialect: 'postgres',
     pool: {

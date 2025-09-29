@@ -12,10 +12,9 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
         idle: config.pool.idle
     }
 });
-module.exports = function () {
-    const db = {};
-    db.Sequelize = Sequelize;
-    db.sequelize = sequelize;
-    db.Customer = require('../app/models/userdetail.server.model.js')(sequelize, Sequelize);
-    return db;
-}
+const db = {};
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+db.userdetails = require('../app/models/userdetail.server.model.js')(sequelize, Sequelize);
+db.UserPasswordDetail = require('../app/models/userpassword.server.model.js')(sequelize, Sequelize);
+module.exports = db;
