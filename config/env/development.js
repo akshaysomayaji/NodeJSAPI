@@ -38,7 +38,7 @@ module.exports = {
     database: 'MMHDB',
     username: 'postgres',
     password: '123456',
-    host: 'localhost',
+    host: '192.168.0.117',
     dialect: 'postgres',
     pool: {
         max: 5,

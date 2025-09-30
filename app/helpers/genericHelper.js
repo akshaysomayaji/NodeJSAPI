@@ -28,6 +28,7 @@ var commonNotification = function () {
             case "Auth003": return "Maximum attempts (5) reached. Your account is locked. Please get in touch with the admin to unlock account.";
             case "Auth004": return "Invalid user name or Invalid password. Please check and retry.";
             case "Auth005": return "Invalid Email Id. Please check and retry.";
+            case "Auth006": return "Passowrd Sent to registered Email. Please check.";
             case "SMS001": return "Login Activity";
             case "SMS002": return "<div><p>Dear Sir/Madam, " +
                 "<br/> A successfull login into your GST Account #email#. on GST platform happened on: <br/>" + new Date().toString() + "</p>" +
@@ -36,6 +37,11 @@ var commonNotification = function () {
                 "<br><p>Support Team</p>" +
                 "</div>";
             case "SMS003": return "An unsuccessful attempt was made to login into your GST account #email#. Please call the helpline (+91 xxxxx yyyyy) if you did not try to login.";
+            case "Auth007": return "Some thing went wrong, please try again.";
+            case "Auth008": return "Emal Id not found. Please check and retry.";
+            case "Auth009": return "Logged out successfully.";
+            case "Auth010": return "Valid token.";
+            case "Auth011": return "Invalid token.";
             default: return Code;
         }
     }
