@@ -1,7 +1,7 @@
 var crypto = require('crypto');
 
 module.exports = (sequelize, Sequelize) => {
-    const UserPasswordDetail = sequelize.define("userdetail", {
+    const UserPasswordDetail = sequelize.define("userpassworddetail", {
         userpasswordid: {
             type: Sequelize.INTEGER,
             allowNull: false,
@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         userid:{
-            type : Sequelize.STRING,
+            type : Sequelize.INTEGER,
             allowNull: false
         },
         createdDate: {
@@ -24,6 +24,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: false
         }
+    }, {
+        // Model options
+        timestamps: true, // Adds createdAt and updatedAt fields
+        tableName: 'userpassworddetail', // Custom table name
     });
 
     UserPasswordDetail.prototype.comparepasswords = function (password) {

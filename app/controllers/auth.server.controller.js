@@ -3,24 +3,31 @@ const db = require("../../config/plsql"),crypto = require('crypto');
 var NotificationHelper = require('../helpers/genericHelper').commonNotification;
 var jwt = require('jsonwebtoken');
 const exp = require("constants");
+const { connected } = require("process");
 const users = db.userdetails;
 const passwordschema = db.UserPasswordDetail;
+notification = new NotificationHelper();
 
 exports.authentication = async function(req, res, next){
-    const { mobile,email,password } = req.body;
-    users.findAll({where:{emailid: email}}).then(data =>{
-        passwordschema.findAll({where :{userid:data.userdetailid}}).then(_respomse =>{
-            if (!_respomse || !_respomse.comparepasswords(password)) {
+    users.findOne({where:{emailid: req.body.email}}).then(data =>{
+        const userdetails = data.dataValues;
+        passwordschema.findOne({where :{userid:userdetails.userdetailid}}).then(_respomse =>{
+            if (!_respomse) {
                 return res.send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth004') });
+            }else{
+                const hashedPassword = crypto.createHash('md5').update(req.body.password).digest('hex');
+                if(_respomse.dataValues.password != hashedPassword){
+                    return res.send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth004') });
+                }
             }
 
             const tokenObj = {
                     id: data.userdetailid,
-                    email: data.emailid,
+                    email: req.body.email,
                     sessionId: req.sessionId,
                     userrole: data.userrole
                 };
-                const token = jwt.sign(tokenObj, config.tokenSecret, { expiresIn: 60 * 60 });
+                const token = jwt.sign(tokenObj, req.config.tokenSecret, { expiresIn: 60 * 60 });
                 res.send({
                     users: data.id,
                     txtFullName: data.fullname,
@@ -58,7 +65,7 @@ exports.register = async function (req, res, next) {
 exports.forgotpassword = async function (req, res, next) {
     user.findAll({ where: { emailid: req.body.email } }).then(data => {
         if (data.length  == 1) {
-            passwordschema.update({ isPasswordReset: true }, { where: { userid: data.userdetailid } }).then(_data => {
+            passwordschema.update({ isPasswordReset: true }, { where: { userid: data.dataValues.userdetailid } }).then(_data => {
                 return res.send({ users: data, success: true, response_message: notification.authetication_notification_message('Auth006') });
             }).catch(err => {
                 res.status(500).send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth007') });
@@ -73,14 +80,14 @@ exports.forgotpassword = async function (req, res, next) {
 }
 
 exports.logout = async function (req, res, next) {
-    const token = req.body.token;
+    const token = req.headers['authorization'];
     jwt.singout(token, req.config.tokenSecret);
     return res.send({ users: [], success: true, response_message: notification.authetication_notification_message('Auth009') });
 }
 exports.checktoken = async function (req, res, next) {
-    const token = req.body.token;
+    const token = req.headers['authorization'];
     jwt.verify(token, req.config.tokenSecret, function (err, decoded) {
-        if (decoded) {
+        if (decoded.exp <= Date.now() / 1000) {
             return res.send({ users: [], success: true, response_message: notification.authetication_notification_message('Auth010') });
         }
         else {

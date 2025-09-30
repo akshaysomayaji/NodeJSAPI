@@ -47,7 +47,7 @@ module.exports = function () {
     });
 
     app.use('/*\w', function (req, res, next) {
-        const excludedPaths = ['/api/login', '/api/user/authenticate', '/api/user/register', '/api/index', '/'];
+        const excludedPaths = ['/api/login', '/api/user/authenticate', '/api/user/add', '/api/index', '/'];
         if (!excludedPaths.includes(req.baseUrl)) {
             const token = req.headers['authorization'];
             if (!token) {

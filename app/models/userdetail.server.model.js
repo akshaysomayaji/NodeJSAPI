@@ -13,10 +13,12 @@ module.exports = (sequelize, Sequelize) => {
         mobilenumber: {
             type: Sequelize.STRING,
             allowNull: true,
+            unique: true
         },
         emailid: {
             type: Sequelize.STRING,
             allowNull: true,
+            unique: true
         },
         isActive: {
             type: Sequelize.BOOLEAN,
@@ -36,7 +38,7 @@ module.exports = (sequelize, Sequelize) => {
     }, {
         // Model options
         timestamps: true, // Adds createdAt and updatedAt fields
-        tableName: 'users_table', // Custom table name
+        tableName: 'userdetail', // Custom table name
     });
     return UserDetail;
 }
