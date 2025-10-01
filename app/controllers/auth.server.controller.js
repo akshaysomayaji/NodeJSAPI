@@ -1,12 +1,14 @@
-const { where } = require("sequelize");
+const { where,Op  } = require("sequelize");
 const db = require("../../config/plsql"),crypto = require('crypto');
 var NotificationHelper = require('../helpers/genericHelper').commonNotification;
+var PasswordHelper = require('../helpers/genericHelper').PasswordHelper;
 var jwt = require('jsonwebtoken');
 const exp = require("constants");
 const { connected } = require("process");
 const users = db.userdetails;
 const passwordschema = db.UserPasswordDetail;
 notification = new NotificationHelper();
+_PasswordHelper = new PasswordHelper();
 
 exports.authentication = async function(req, res, next){
     users.findOne({where:{emailid: req.body.email}}).then(data =>{
@@ -22,7 +24,7 @@ exports.authentication = async function(req, res, next){
             }
 
             const tokenObj = {
-                    id: data.userdetailid,
+                    id: userdetails.userdetailid,
                     email: req.body.email,
                     sessionId: req.sessionId,
                     userrole: data.userrole
@@ -98,4 +100,28 @@ exports.checktoken = async function (req, res, next) {
 
 exports.resetpassword = async function (req, res, next) {
 
+}
+
+exports.signup = async function (req, res, next){
+    var body = req.body;
+    users.create(body).then(data => {
+        const userdetails = data.dataValues;
+        body.password = _PasswordHelper.generatePassowrd("10");
+        passwordschema.create({ password: body.password, userid: data.userdetailid }).then(_data => {
+            return res.send({ users: data, success: true, response_message: notification.authetication_notification_message('Auth006') });
+        }).catch(err => {
+            res.status(500).send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth007') });
+        }); 
+    }).catch(err => {
+        res.status(500).send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth007') });
+    });
+}
+
+exports.validateEmailMobile = async function (req, res, next){
+    users.findOne({where: {[Op.or]:[{emailid: req.body.email},{mobilenumber : req.body.mobilenumber}]}}).then(data =>{
+        if(data != null){
+            return res.send({ users: data, success: false, response_message: notification.authetication_notification_message('Auth012') });
+        }
+        return res.send({ users: {}, success: true, response_message: "" });
+    });
 }

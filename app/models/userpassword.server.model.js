@@ -3,9 +3,9 @@ var crypto = require('crypto');
 module.exports = (sequelize, Sequelize) => {
     const UserPasswordDetail = sequelize.define("userpassworddetail", {
         userpasswordid: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.UUID,
             allowNull: false,
-            autoIncrement: true,
+            defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
         },
         password:{
@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         userid:{
-            type : Sequelize.INTEGER,
+            type : Sequelize.UUID,
             allowNull: false
         },
         createdDate: {

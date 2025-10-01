@@ -42,6 +42,7 @@ var commonNotification = function () {
             case "Auth009": return "Logged out successfully.";
             case "Auth010": return "Valid token.";
             case "Auth011": return "Invalid token.";
+            case "Auth012": return "Emal Id already exists, try to login.";
             default: return Code;
         }
     }
@@ -102,18 +103,30 @@ var mailgeneraation = function () {
             }
         });
     }
-};
-
-function generatePassword(length) {
-    var password = '', character;
-    while (length > password.length) {
-        if (password.indexOf(character = String.fromCharCode(Math.floor(Math.random() * 94) + 33), Math.floor(password.length / 94) * 94) < 0) {
-            password += character;
-        }
-    }
-    return password;
 }
+
+var passwordHelper = function () {
+
+    this.generatePassowrd = function (length) {
+        var password = '', character;
+        while (length > password.length) {
+            if (password.indexOf(character = String.fromCharCode(Math.floor(Math.random() * 94) + 33), Math.floor(password.length / 94) * 94) < 0) {
+                password += character;
+            }
+        }
+        return password;
+    };
+    this.generateOTP = function () {
+        return otpGenerator.generate(6, {
+            digits: true,
+            upperCase: false,
+            specialChars: false,
+            alphabets: false
+        });
+    }
+};
 
 exports.mailgeneraation = mailgeneraation;
 exports.GenericHelper = GenericHelper;
 exports.commonNotification = commonNotification;
+exports.PasswordHelper = passwordHelper;

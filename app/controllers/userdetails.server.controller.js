@@ -8,9 +8,10 @@ exports.register = async function (req, res, next) {
     var body  = req.body;
     const hashedPassword = crypto.createHash('md5').update(req.body.password).digest('hex');
     users.create(body).then(data => {
+      const userdetails = data.dataValues;
         var contet = {
             password : hashedPassword,
-            userid : data.uniqno
+            userid : userdetails.userdetailid
         };
         console.log("content = "+contet);
         password.create(contet).then(_data =>{

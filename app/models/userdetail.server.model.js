@@ -1,14 +1,14 @@
 module.exports = (sequelize, Sequelize) => {
     const UserDetail = sequelize.define("userdetail", {
         userdetailid: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.UUID,
             allowNull: false,
-            autoIncrement: true,
             primaryKey: true,
+            defaultValue: Sequelize.UUIDV4,
         },
         fullname: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         mobilenumber: {
             type: Sequelize.STRING,
