@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]   # You can test multiple versions
+        node-version: [20.11.0]   # You can test multiple versions
 
     steps:
       - name: Checkout repository
