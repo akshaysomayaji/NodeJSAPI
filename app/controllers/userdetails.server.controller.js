@@ -13,7 +13,6 @@ exports.register = async function (req, res, next) {
             password : hashedPassword,
             userid : userdetails.userdetailid
         };
-        console.log("content = "+contet);
         password.create(contet).then(_data =>{
             console.log("data "+ _data);
             return res.send({ users: data, success: true, response_message: notification.getUser_notification_message('User003') });

@@ -11,16 +11,24 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         imageContent:{
-            type: DataTypes.BLOB('long'), // 'tiny', 'medium', 'long'
+            type: Sequelize.BLOB('long'), // 'tiny', 'medium', 'long'
             allowNull: false,
+        },
+        imageFileMimeType:{
+            type: Sequelize.STRING,
+            allowNull: false
         },
         imageName:{
             type: Sequelize.STRING,
             allowNull: false
         },
-        createdDate: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW,
+        isActive:{
+            type: Sequelize.BOOLEAN,
+            defaultValue: true
+        },
+        imageType:{
+            type: Sequelize.STRING,
+            allowNull: false
         }  
     });
     return productImagedetails;

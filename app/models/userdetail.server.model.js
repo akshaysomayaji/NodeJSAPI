@@ -24,10 +24,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
              defaultValue: false
         },
-        createdDate: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW,
-        },
         userrole: {
             type: Sequelize.STRING
         },

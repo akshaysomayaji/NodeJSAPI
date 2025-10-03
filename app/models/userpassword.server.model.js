@@ -16,10 +16,6 @@ module.exports = (sequelize, Sequelize) => {
             type : Sequelize.UUID,
             allowNull: false
         },
-        createdDate: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW,
-        },
         isPasswordReset:{
             type: Sequelize.BOOLEAN,
             defaultValue: false

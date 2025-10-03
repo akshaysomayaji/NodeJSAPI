@@ -43,24 +43,22 @@ exports.authentication = async function(req, res, next){
 }
 
 exports.register = async function (req, res, next) {
-    user.findAll({ where: { emailid: req.body.email } }).then(data => {
-        if (data.length > 0) {
-            return res.send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth005') });
-        }
-        else {
-            var body = req.body;
-            users.create(body).then(data => {
-                passwordschema.create({ password: body.password, userid: data.userdetailid }).then(_data => {
-                    return res.send({ users: data, success: true, response_message: notification.authetication_notification_message('Auth006') });
-                }).catch(err => {
-                    res.status(500).send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth007') });
-                })  
-            }).catch(err => {
-                res.status(500).send({ users :[], success: false, response_message: notification.authetication_notification_message('Auth007') });
-            })
-        }
-    }).catch(err => {
-        res.status(500).send({ users: [], success: false, response_message: notification.authetication_notification_message('Auth007') });
+    var body  = req.body;
+    const hashedPassword = crypto.createHash('md5').update(req.body.password).digest('hex');
+    users.create(body).then(data => {
+      const userdetails = data.dataValues;
+        var contet = {
+            password : hashedPassword,
+            userid : userdetails.userdetailid
+        };
+        passwordschema.create(contet).then(_data =>{
+            return res.send({ users: data, success: true, response_message: notification.getUser_notification_message('User003') });
+        }).catch(err => {
+            res.status(500).send({ users: data, success: false, msg: notification.getUser_notification_message('User000'), err });
+        })        
+    })
+    .catch(err => {
+      res.status(500).send({ users: {}, success: false, msg: notification.getUser_notification_message('User000'), err });
     });
 }
 

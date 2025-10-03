@@ -50,14 +50,18 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: true
         },
-        createdDate: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW,
-        },
         isActive:{
             type: Sequelize.BOOLEAN,
             defaultValue: true
-        }     
+        },
+        userId:{
+            type: Sequelize.UUID,
+            allowNull: false,
+        },
+        tagId:{
+            type: Sequelize.UUID,
+            allowNull: true,
+        }      
     });
     return productdetails;
 }

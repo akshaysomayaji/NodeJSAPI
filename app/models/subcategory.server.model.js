@@ -21,10 +21,6 @@ module.exports = (sequelize, Sequelize) => {
         isActive: {
             type: Sequelize.BOOLEAN,
             defaultValue: false
-        },
-        createdDate:{
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW,            
         }
     }); 
     return subcateogryDetails;

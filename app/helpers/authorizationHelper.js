@@ -18,7 +18,6 @@ function authenticate(req, res, next) {
 
 // Role checker
 function authorizeRoles(...roles) {
-    console.log("inside authorization");
   return (req, res, next) => {
     console.log(req.decoded.userrole);
     if (!roles.includes(req.decoded.userrole)) {

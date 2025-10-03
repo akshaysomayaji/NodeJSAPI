@@ -37,18 +37,41 @@ const businessdetails = sequelize.define("businessDetails",{
         type: Sequelize.STRING,
         allowNull: false
     },
-    isActive:{
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+    storeName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
     },
-    createdDate: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+    storeLocation:{
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    isSeller:{
+        type : Sequelize.BOOLEAN,
+        allowNull: false,
+        default: false
+    },
+    isManufacturer:{
+        type : Sequelize.BOOLEAN,
+        allowNull: false,
+        default: false
     },
     businessCategoryId:{
         type: Sequelize.UUID,
         allowNull: false,
-    }       
+    },
+    storeLogo:{
+        type: Sequelize.BLOB('long'), // 'tiny', 'medium', 'long'
+        allowNull: false,
+    },  
+    isActive:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    userId:{
+        type: Sequelize.UUID,
+        allowNull: false,
+    }     
 });
 return businessdetails;
 }

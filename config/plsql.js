@@ -20,4 +20,8 @@ db.UserPasswordDetail = require('../app/models/userpassword.server.model.js')(se
 db.businessDetails = require('../app/models/business.server.model.js')(sequelize, Sequelize);
 db.categoryDetail = require('../app/models/category.server.model.js')(sequelize,Sequelize);
 db.subcategoryDetail = require('../app/models/subcategory.server.model.js')(sequelize,Sequelize);
+db.productDetails = require('../app/models/product.server.model.js')(sequelize,Sequelize);
+db.paymentDetail = require('../app/models/payment.server.model.js')(sequelize,Sequelize);
+db.productImages = require('../app/models/productimages.server.model.js')(sequelize,Sequelize);
+require('../app/models/producttags.server.model.js')(sequelize, Sequelize);
 module.exports = db;
