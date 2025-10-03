@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
         },
         subcategoryIcon:{
-            type: DataTypes.BLOB('long'),
+            type: Sequelize.BLOB('long'),
             allowNull: true 
         },
         subcategoryDescription:{

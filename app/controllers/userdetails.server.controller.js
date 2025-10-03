@@ -44,7 +44,6 @@ exports.getallusers = async function (req, res, next){
       if (!result) {
             return res.send({ users: [], success: false, msg: notification.getUser_notification_message('User003') });
         }
-        console.log(result);
         res.send({ users: result, success: true, msg: "" });
     })
     .catch(err => {

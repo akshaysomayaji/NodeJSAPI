@@ -22,13 +22,33 @@ const businessdetails = sequelize.define("businessDetails",{
         unique: true
     },
     gstCertificateFile:{
-        type: DataTypes.BLOB('long'), // 'tiny', 'medium', 'long'
+        type: Sequelize.BLOB('long'), // 'tiny', 'medium', 'long'
         allowNull: false,
     },
+    gstCertificateFileMimeType:{
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     panCardImage:{
-        type: DataTypes.BLOB('long'), // 'tiny', 'medium', 'long'
+        type: Sequelize.BLOB('long'), // 'tiny', 'medium', 'long'
         allowNull: false,
-    }    
+    },
+    panCardImageFileMimeType:{
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    isActive:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    createdDate: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+    },
+    businessCategoryId:{
+        type: Sequelize.UUID,
+        allowNull: false,
+    }       
 });
 return businessdetails;
 }
