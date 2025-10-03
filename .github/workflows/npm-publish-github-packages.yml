@@ -7,12 +7,12 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [20.11.0]   # You can test multiple versions
+        node-version: [18.x, 20.x]  # Test multiple Node versions if needed
 
     steps:
       - name: Checkout repository
@@ -26,9 +26,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build project
-        run: npm run build
 
       - name: Run tests
         run: npm test
