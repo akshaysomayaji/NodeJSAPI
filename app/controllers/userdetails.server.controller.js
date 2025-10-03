@@ -52,7 +52,12 @@ exports.getallusers = async function (req, res, next){
 
 exports.approve = async function (req, res, next) {
     users.update({ isActive: true, isApproved: true }, { where: { userdetailid: req.params.id } }).then(result => { 
-      return res.send({ users: result, success: true, msg: notification.getUser_notification_message('User004') });
+      if(result[0] == 1){
+        return res.send({ users: result, success: true, msg: notification.getUser_notification_message('User004') });
+      }else{
+        return res.send({ users: result, success: false, msg: notification.getUser_notification_message('User016') });
+      }
+      
     })
     .catch(err => {
       res.status(500).send({ users: {}, success: false, msg: notification.getUser_notification_message('User000'), err });

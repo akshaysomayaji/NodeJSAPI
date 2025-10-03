@@ -66,6 +66,7 @@ var commonNotification = function () {
             case "User014": return "Fail to send to OTP.";
             case "User015": return "Fail to send to mail, please try again.";
             case "User000": return "Some thing went wrong, please try again.";
+            case "User016": return "Failed to update,User not found.";
             default: return Code;
         }
     }
