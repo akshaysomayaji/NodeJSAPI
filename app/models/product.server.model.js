@@ -57,11 +57,7 @@ module.exports = (sequelize, Sequelize) => {
         userId:{
             type: Sequelize.UUID,
             allowNull: false,
-        },
-        tagId:{
-            type: Sequelize.UUID,
-            allowNull: true,
-        }      
+        }     
     });
     return productdetails;
 }

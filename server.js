@@ -4,7 +4,7 @@ var config = require('./config/config'),
 	express = require('./config/express'),
 	plsql = require('./config/plsql');
 var app = express();
-plsql.sequelize.sync({ force: true }).then(() => {
+plsql.sequelize.sync({ force: false }).then(() => {
   console.log("Drop and re-sync db.");
 });
 module.exports = app;

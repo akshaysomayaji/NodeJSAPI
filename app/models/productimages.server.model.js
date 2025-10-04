@@ -22,6 +22,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        selectedImage:{
+            type: Sequelize.BOOLEAN,
+            defaultValue: true
+        },
         isActive:{
             type: Sequelize.BOOLEAN,
             defaultValue: true

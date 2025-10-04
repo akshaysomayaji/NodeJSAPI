@@ -11,11 +11,17 @@ exports.addBusinessDetails = async function name(req, res, next) {
         gstCertificateFileMimeType: req.body.gstCertificateFileMimeType,
         panCardImageFileMimeType: req.body.panCardImageFileMimeType,
         storeLogo: req.body.storeLogo,
-        storeName: req.body.storeName, 
+        storeName: req.body.storeName,
+        storeLocation: req.body.storeLocation,
+        isSeller: req.body.isSeller,
+        isManufacturer: req.body.isManufacturer,
+        businessCategoryId: req.body.businessCategoryId,
+        userId: req.decoded.id
     }
     businessDetails.create(content).then(data =>{
-         return res.send({ businessdetails: data, success: true, response_message: "Business Detail Added." });
+         return res.send({ businessdetails: data, success: true, response_message: "Business Detail Added Successfully." });
     }).catch(err=>{
         res.status(500).send({ businessdetails: {}, success: false, msg: err.message });
     });
 }
+

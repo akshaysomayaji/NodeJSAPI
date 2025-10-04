@@ -1,17 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
-    const productTagdetails = sequelize.define("productTagdetails",{
+    const Tagdetails = sequelize.define("productTagdetails",{
         productTagId:{
             type: Sequelize.UUID,
             allowNull: false,
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
         },
-        tagid:{
-            type: Sequelize.UUID,
-            allowNull: false
-        },
-        productId:{
-            type: Sequelize.UUID,
+        tagName:{
+            type: Sequelize.STRING,
             allowNull: false
         },
         isActive:{
@@ -19,6 +15,5 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: true
         }   
     });
-    return productTagdetails;
+    return Tagdetails;
 }
-//producttags.server.model.js
