@@ -86,3 +86,17 @@ exports.getproductdetails = async function (req, res, next) {
         res.status(500).send({ data: [], success: false, response_message: err.message });
     });;
 }
+
+exports.delete = async function (req, res, next) { }
+
+exports.searchproduct = async function (req, res, next) {
+    productdetails.findOne({ where: { [Op.or]: [{ [Op.and]: [{ categoryId: req.body.categoryId }, { subcategoryId: req.params.subcategoryid }] }, { isActive: 1 }] } }).then(data => {
+        return res.send({ data: data, success: true, response_message: "" });
+    }).catch(err => {
+        res.status(500).send({ data: [], success: false, response_message: err.message });
+    });;
+}
+
+exports.addtocart = async function (req, res, next) {
+
+}

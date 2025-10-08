@@ -1,52 +1,44 @@
 module.exports = (sequelize, Sequelize) => {
   const Notification = sequelize.define('notification', {
-    const
     notificationId: {
       type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
       defaultValue: Sequelize.UUIDV4
     },
-
     // short headline (e.g. "Price Drop Alert", "Order Shipped")
     title: {
       type: Sequelize.STRING,
       allowNull: false
     },
-
     // optional longer description
     message: {
       type: Sequelize.TEXT,
       allowNull: true
     },
-
     // category such as "Today", "Yesterday", "This Week"
     category: {
       type: Sequelize.STRING,
       allowNull: false,
       defaultValue: 'This Week'
     },
-
     // tag to mark special types (price_drop, order_shipped, new_arrival, limited_offer, seller_response, achievement, follower)
     type: {
       type: Sequelize.STRING,
       allowNull: true
     },
-
     // whether the user has read the notification
     isRead: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
-
     // if this notification is starred/important
     isImportant: {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
-
     // store any small metadata (json-string)
     meta: {
       type: Sequelize.JSON, // if your DB supports JSON; otherwise use STRING

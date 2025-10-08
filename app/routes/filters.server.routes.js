@@ -1,18 +1,8 @@
-const express = require('express');
-const router = express.Router();
 const filterController = require('../controllers/filter.controller');
+const { authenticate, authorizeRoles } = require("../helpers/authorizationHelper");
 
-const fakeAuth = (req, res, next) => {
-  if (!req.user) {
-    const headerId = req.header('x-user-id');
-    if (headerId) req.user = { id: headerId };
-  }
-  next();
+module.exports = function (app) {
+    app.route('/api/notification/get').get(authorizeRoles("admin", "seller", "buyer"),filterController.getFilter);
+    app.route('/api/notification/save').get(authorizeRoles("admin", "seller", "buyer") ,filterController.saveFilter);
+    app.route('/api/notification/reset').get(authorizeRoles("admin", "seller","buyer") ,filterController.resetFilter);
 };
-
-router.use(fakeAuth);
-
-router.get('/', filterController.getFilter);        
-router.post('/', filterController.saveFilter);      
-router.post('/reset', filterController.resetFilter);
-module.exports = router;
