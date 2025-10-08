@@ -35,5 +35,12 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         }  
     });
+
+    productImagedetails.associate = (models) => {
+        productImagedetails.belongsTo(models.productdetails, {
+            foreignKey: 'departmentId',
+            as: 'department'
+        });
+    };
     return productImagedetails;
 }
