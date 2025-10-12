@@ -19,6 +19,7 @@ exports.addBusinessDetails = async function (req, res, next) {
         businessCategoryId: req.body.businessCategoryId,
         userId: req.decoded.id
     }
+    console.log(content);
     businessDetails.create(content).then(data => {
         if (req.body.isManufacturer) {
             users.update({ is_manufacturer: true }, { where: { userdetailid: req.decoded.id } }).then(result => {
@@ -26,7 +27,8 @@ exports.addBusinessDetails = async function (req, res, next) {
             }).catch(err => {
                 res.status(500).send({ businessdetails: {}, success: false, response_message: err.message });
             });
-         }         
+         } 
+         return res.send({ businessdetails: data, success: true, response_message: "Business Detail Added Successfully." });        
     }).catch(err=>{
         res.status(500).send({ businessdetails: {}, success: false, response_message: err.message });
     });

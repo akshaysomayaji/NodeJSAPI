@@ -146,3 +146,28 @@ exports.updateproductstatus = async function (res, res, next) {
         res.status(500).send({ data: [], success: false, response_message: err.message });
     });
 }
+
+exports.search = async function (req,res,next) {
+    productdetails.findAll({
+    attributes: [],
+    where: { [Op.or]: [{ [Op.and]: [{ categoryId: req.params.categoryId }, { subcategoryId: req.params.subcategoryid }] }, { isActive: 1 }] },
+    include: [
+        {
+        model: productImagedetails,
+        attributes: [],
+        required: false, // LEFT JOIN
+        include: [
+            {
+            model: producttagsdetails,
+            attributes: [],
+            required: false // LEFT JOIN again
+            }
+        ]
+        }
+    ]
+    }).then(data => {
+        return res.send({ data: data, success: true, response_message: "" });
+    }).catch(err => {
+        res.status(500).send({ data: [], success: false, response_message: err.message });
+    });
+}

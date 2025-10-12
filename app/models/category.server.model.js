@@ -6,6 +6,10 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true,
         },
+        categoryName:{
+            type: Sequelize.STRING,
+            allowNull: false
+        },
         categoryIcon:{
             type: Sequelize.BLOB('long'),
             allowNull: true 

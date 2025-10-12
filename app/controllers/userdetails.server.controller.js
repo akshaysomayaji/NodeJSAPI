@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const db = require("../../config/plsql"),crypto = require('crypto');
 var NotificationHelper = require('../helpers/genericHelper').commonNotification;
 const users = db.userdetails;
@@ -39,7 +40,7 @@ exports.getuserdetails = async function (req, res, next){
 }
 
 exports.getallusers = async function (req, res, next){
-    users.findAll().then(result => {
+    users.findAll({where :{userrole:"ADMIN"}}).then(result => {
       if (!result) {
             return res.send({ users: [], success: false, msg: notification.getUser_notification_message('User003') });
         }

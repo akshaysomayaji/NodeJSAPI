@@ -10,6 +10,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BLOB('long'),
             allowNull: true 
         },
+        subcategoryName:{
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         subcategoryDescription:{
             type: Sequelize.STRING,
             allowNull: true

@@ -25,10 +25,10 @@ module.exports = (sequelize, Sequelize) => {
              defaultValue: false
         },
         userrole: {
-            type: DataTypes.ENUM('ADMIN', 'BUYER', 'SELLER'),
+            type: Sequelize.ENUM('ADMIN', 'BUYER', 'SELLER'),
         },
         is_manufacturer: {
-            type: DataTypes.BOOLEAN,
+            type: Sequelize.BOOLEAN,
             defaultValue: false,
             allowNull: false,
             validate: {
