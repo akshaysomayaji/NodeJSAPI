@@ -3,6 +3,7 @@ const db = require("../../config/plsql");
 const productdetails = db.productdetails;
 const productImagedetails = db.productImagedetails;
 const producttagsdetails = db.producttagsdetails;
+const cartDetails = db.cartDetails;
 exports.addProduct = async function (req, res, next) {
     const content = {
         productName : req.body.productName,
@@ -16,7 +17,7 @@ exports.addProduct = async function (req, res, next) {
         subcategoryId: req.body.subcategoryId,
         brandName: req.body.brandName,
         productStatus: req.body.productStatus,
-        userId: req.body.userId
+        createdUser: req.body.userId
     }
     productdetails.create(content).then(data =>{
         var images = [];
@@ -70,24 +71,39 @@ exports.update = async function (req, res, next) {
     }
     productdetails.update(content,{where :{ productId: req.params.id}}).then(result => { 
         if(result != null){
-
+            return res.send({ data: result, success: true, response_message: "Product is updated." });
         }
+    }).catch(error => {
+        res.status(500).send({ data: [], success: false, response_message: err.message });
+    });;
+}
+
+exports.getproduct = async function (req, res, next) {
+    productdetails.findOne({ where: { productId: req.params.id } }).then(data => {
+        return res.send({ data: data, success: true, response_message: "" });
+    }).catch(err => {
+        res.status(500).send({ data: [], success: false, response_message: err.message });
     });
 }
 
-exports.getproducts = async function (req, res, next) {
-    
-}
-
 exports.getproductdetails = async function (req, res, next) {
-    productdetails.findOne({where: {[Op.or]:[{productName: req.body.productName},{categoryId : req.body.categoryId},{lowStockAlert : req.body.lowStockAlert},{productStatus : req.body.productStatus}]}}).then(data =>{
+    productdetails.findAll({ where: { [Op.or]: [{ productName: req.body.productName }, { sku: req.body.sku },{categoryId : req.body.categoryId},{lowStockAlert : req.body.lowStockAlert},{productStatus : req.body.productStatus}]}}).then(data =>{
         return res.send({ data: data, success: true, response_message: "" });
     }).catch(err => {
         res.status(500).send({ data: [], success: false, response_message: err.message });
     });;
 }
 
-exports.delete = async function (req, res, next) { }
+exports.delete = async function (req, res, next) {
+    productdetails.update({ isActive: 0 }, { where: { productId: req.params.id } }).then(result => {
+        if (result != null) {
+            return res.send({ data: result, success: true, response_message: "Product Deleted Successfully." });
+        }
+        return res.send({ data: result, success: false, response_message: "Product Not Deleted." });
+    }).catch(err => {
+        res.status(500).send({ data: [], success: false, response_message: err.message });
+    });
+}
 
 exports.searchproduct = async function (req, res, next) {
     productdetails.findOne({ where: { [Op.or]: [{ [Op.and]: [{ categoryId: req.body.categoryId }, { subcategoryId: req.params.subcategoryid }] }, { isActive: 1 }] } }).then(data => {
@@ -98,5 +114,35 @@ exports.searchproduct = async function (req, res, next) {
 }
 
 exports.addtocart = async function (req, res, next) {
+    cartDetails.findOne({ where: { productId: req.body.productId, userId: req.body.userId } }).then(data => {
+        if (data != null) {
+            data.dataValues.quantity = data.dataValues.quantity + 1;
+            data.dataValues.price = req.body.price;
+            data.dataValues.totalPrice = data.dataValues.quantity * req.body.price;
+            cartDetails.update(data.dataValues, { where: { productId: req.body.productId, userId: req.body.userId } }).then(result => {
+                return res.send({ data: result, success: true, response_message: "Product Added To Cart Successfully." });
+            }).catch(err => {
+                res.status(500).send({ data: [], success: false, response_message: err.message });
+            });
+        } else {
+            cartDetails.create(req.body).then(data => {
+                return res.send({ data: data, success: true, response_message: "Product Added To Cart Successfully." });
+            }).catch(err => {
+                res.status(500).send({ data: [], success: false, response_message: err.message });
+            });
+        }
+    }).catch(err => {
+        res.status(500).send({ data: [], success: false, response_message: err.message });
+    });
+}
 
+exports.updateproductstatus = async function (res, res, next) {
+    productdetails.update({
+        adminApprovedStatus: req.body.status,
+        adminId: req.decoded.id
+    }).then(result => {
+        return res.send({data: result, success: true, response_message: "Product is " + req.body.status + "." });
+    }).catch(error => {
+        res.status(500).send({ data: [], success: false, response_message: err.message });
+    });
 }

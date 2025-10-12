@@ -21,6 +21,14 @@ module.exports = (sequelize, Sequelize) => {
         price: {
             type: Sequelize.DECIMAL(12, 2),
             allowNull: false
+        },
+        totalPrice: {
+            type: Sequelize.DECIMAL(12, 2),
+            allowNull: false
+        },
+        discount: {
+            type: Sequelize.DECIMAL(12, 2),
+            allowNull: true
         }
     });
     return cartDetails;

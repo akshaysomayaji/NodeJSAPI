@@ -68,6 +68,11 @@ const businessdetails = sequelize.define("businessDetails",{
         type: Sequelize.BOOLEAN,
         defaultValue: false
     },
+    businessStatus: {
+        type: Sequelize.ENUM('Active', 'Inactive', 'Suspended'),
+        allowNull: false,
+        defaultValue: 'Active'
+    },
     userId:{
         type: Sequelize.UUID,
         allowNull: false,

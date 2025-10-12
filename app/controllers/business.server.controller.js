@@ -1,7 +1,8 @@
 const { where,Op  } = require("sequelize");
 const db = require("../../config/plsql");
 const businessDetails = db.businessDetails;
-exports.addBusinessDetails = async function name(req, res, next) {
+const users = db.userdetails;
+exports.addBusinessDetails = async function (req, res, next) {
     const content = {
         businessName : req.body.businessName,
         gstin: req.body.gstin,
@@ -18,10 +19,16 @@ exports.addBusinessDetails = async function name(req, res, next) {
         businessCategoryId: req.body.businessCategoryId,
         userId: req.decoded.id
     }
-    businessDetails.create(content).then(data =>{
-         return res.send({ businessdetails: data, success: true, response_message: "Business Detail Added Successfully." });
+    businessDetails.create(content).then(data => {
+        if (req.body.isManufacturer) {
+            users.update({ is_manufacturer: true }, { where: { userdetailid: req.decoded.id } }).then(result => {
+                return res.send({ businessdetails: data, success: true, response_message: "Business Detail Added Successfully." });
+            }).catch(err => {
+                res.status(500).send({ businessdetails: {}, success: false, response_message: err.message });
+            });
+         }         
     }).catch(err=>{
-        res.status(500).send({ businessdetails: {}, success: false, msg: err.message });
+        res.status(500).send({ businessdetails: {}, success: false, response_message: err.message });
     });
 }
 

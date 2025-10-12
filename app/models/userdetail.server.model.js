@@ -25,7 +25,19 @@ module.exports = (sequelize, Sequelize) => {
              defaultValue: false
         },
         userrole: {
-            type: Sequelize.STRING
+            type: DataTypes.ENUM('ADMIN', 'BUYER', 'SELLER'),
+        },
+        is_manufacturer: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+            validate: {
+                async isSellerOnly(value) {
+                    if (value === true && this.role !== 'SELLER') {
+                        throw new Error('Only SELLER can be a manufacturer');
+                    }
+                },
+            },
         },
         isApproved: {
             type: Sequelize.BOOLEAN,

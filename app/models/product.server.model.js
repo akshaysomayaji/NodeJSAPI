@@ -50,14 +50,23 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: true
         },
+        adminApprovedStatus: {
+            type: Sequelize.ENUM('SUBMITTED', 'APPROVED', 'REJECTED', 'REVIEWING', ),
+            allowNull: false,
+            defaultValue: 'SUBMITTED'
+        },
         isActive:{
             type: Sequelize.BOOLEAN,
             defaultValue: true
         },
-        userId:{
+        adminId: {
+            type: Sequelize.UUID,
+            allowNull: true,
+        },
+        createdUser:{
             type: Sequelize.UUID,
             allowNull: false,
-        }     
+        }
     });
     return productdetails;
 }
