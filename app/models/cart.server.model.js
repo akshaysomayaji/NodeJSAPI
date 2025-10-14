@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const cartDetails = sequelize.define("cartDetails", {
-        cartId: {
+        cartProductId: {
             type: Sequelize.UUID,
             primaryKey: true,
             allowNull: false,
@@ -10,25 +10,42 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.UUID,
             allowNull: false
         },
-        productId: {
+        cartId: {
             type: Sequelize.UUID,
             allowNull: false
         },
-        quantity: {
+        totalAmount: {
             type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        price: {
-            type: Sequelize.DECIMAL(12, 2),
-            allowNull: false
-        },
-        totalPrice: {
-            type: Sequelize.DECIMAL(12, 2),
             allowNull: false
         },
         discount: {
             type: Sequelize.DECIMAL(12, 2),
             allowNull: true
+        },
+        shipping: {
+            type: Sequelize.ENUM('FREE', 'Chargable'),
+        },
+        shippingCharge: {
+            allowNull: false,
+            validate: {
+                async isNotFree(value) {
+                    if (this.shipping !== 'FREE') {
+                        value = 50
+                    }
+                },
+            },
+        },
+        shippingAddress: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        paymentStatus: {
+            type: Sequelize.ENUM('Pending', 'Success', 'Failed', 'Cancelled', 'Refunded','Processing'),
+            defaultValue: 'Pending'
+        },
+        status: {
+            type: Sequelize.ENUM('ACTIVE', 'INACTIVE'),
+            defaultValue: 'ACTIVE'
         }
     });
     return cartDetails;
