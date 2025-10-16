@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Tagdetails = sequelize.define("productTagdetails",{
+    const Tagdetails = sequelize.define("tagdetails",{
         productTagId:{
             type: Sequelize.UUID,
             allowNull: false,

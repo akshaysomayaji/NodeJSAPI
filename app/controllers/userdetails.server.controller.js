@@ -30,12 +30,12 @@ exports.getuserdetails = async function (req, res, next){
     const id = req.params.id;
     users.findByPk(id).then(result => {
       if (!result) {
-            return res.send({ users: [], success: false, msg: notification.getUser_notification_message('User003') });
+          return res.send({ data: [], success: false, msg: notification.getUser_notification_message('User003') });
         }
-        res.send({ users: result, success: true, msg: "" });
+        res.send({ data: result, success: true, msg: "" });
     })
     .catch(err => {
-      res.status(500).send({ users: {}, success: false, msg: notification.getUser_notification_message('User000'), err });
+        res.status(500).send({ data: {}, success: false, msg: notification.getUser_notification_message('User000'), err });
     });
 }
 

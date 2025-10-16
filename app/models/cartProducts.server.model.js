@@ -26,10 +26,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DECIMAL(12, 2),
             allowNull: false
         },
-        totalPrice: {
-            type: Sequelize.DECIMAL(12, 2),
-            allowNull: false
-        },
         gst: {
             type: Sequelize.DECIMAL(12, 2),
             allowNull: true
@@ -45,6 +41,10 @@ module.exports = (sequelize, Sequelize) => {
         paymentStatus: {
             type: Sequelize.ENUM('UNPAID', 'PAID'),
             allowNull: false        
+        },
+        isActive: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true
         }
     });
     return cartProductsDetails;

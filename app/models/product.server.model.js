@@ -34,6 +34,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             defaultValue: true
         },
+        lowStockUnits: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
         categoryId:{
             type: Sequelize.UUID,
             allowNull: false,

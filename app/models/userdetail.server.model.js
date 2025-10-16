@@ -42,6 +42,10 @@ module.exports = (sequelize, Sequelize) => {
         isApproved: {
             type: Sequelize.BOOLEAN,
             defaultValue: false
+        },
+        isSetupCompleted: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
         }
     }, {
         // Model options

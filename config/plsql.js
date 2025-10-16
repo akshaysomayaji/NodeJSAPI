@@ -25,7 +25,8 @@ db.paymentDetail = require('../app/models/payment.server.model.js')(sequelize,Se
 db.productImages = require('../app/models/productimages.server.model.js')(sequelize, Sequelize);
 db.productTags = require('../app/models/producttags.server.model.js')(sequelize, Sequelize);
 db.cartDetails = require('../app/models/cart.server.model.js')(sequelize, Sequelize);
-
+db.cartProductDetails = require('../app/models/cartProducts.server.model.js')(sequelize, Sequelize);
+db.tags = require('../app/models/tags.server.model')(sequelize, Sequelize);
 db.userdetails.hasMany(db.productDetails, { foreignKey: "sellerId", as: "products" });
 db.productDetails.belongsTo(db.userdetails, { foreignKey: "sellerId", as: "seller" });
 

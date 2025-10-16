@@ -10,8 +10,10 @@ const passwordschema = db.UserPasswordDetail;
 notification = new NotificationHelper();
 _PasswordHelper = new PasswordHelper();
 
-exports.authentication = async function(req, res, next){
-    users.findOne({where:{emailid: req.body.email}}).then(data =>{
+exports.authentication = async function (req, res, next) {
+    console.log(req.body);
+    users.findOne({ where: { [Op.or]: [{ emailid: req.body.email }, { mobilenumber: req.body.mobilenumber }] } }).then(data => {
+        console.log(data);
         const userdetails = data.dataValues;
         passwordschema.findOne({where :{userid:userdetails.userdetailid}}).then(_respomse =>{
             if (!_respomse) {
@@ -27,22 +29,25 @@ exports.authentication = async function(req, res, next){
                     id: userdetails.userdetailid,
                     email: req.body.email,
                     sessionId: req.sessionId,
-                    userrole: data.userrole
+                    userrole: data.userrole,
+                    isManufacutrer: data.is_manufacturer
                 };
                 const token = jwt.sign(tokenObj, req.config.tokenSecret, { expiresIn: 60 * 60 });
                 res.send({
-                    users: data.id,
+                    users: data,
                     txtFullName: data.fullname,
                     success: true,
                     response_message: '',
                     token,
                     txtRoleName: data.userrole,
+                    isSetupCompleted: data.isSetupCompleted
                 });
         })
     })
 }
 
 exports.register = async function (req, res, next) {
+    console.log(req.body);
     var body  = req.body;
     const hashedPassword = crypto.createHash('md5').update(req.body.password).digest('hex');
     users.create(body).then(data => {
@@ -52,13 +57,22 @@ exports.register = async function (req, res, next) {
             userid : userdetails.userdetailid
         };
         passwordschema.create(contet).then(_data =>{
-            return res.send({ users: data, success: true, response_message: notification.getUser_notification_message('User003') });
+            const tokenObj = {
+                    id: userdetails.userdetailid,
+                    email: req.body.email,
+                    sessionId: req.sessionId,
+                    userrole: data.userrole,
+                    isManufacutrer: data.is_manufacturer
+                };
+                const token = jwt.sign(tokenObj, req.config.tokenSecret, { expiresIn: 60 * 60 });
+
+            return res.send({ users: data, success: true, response_message: notification.getUser_notification_message('User003'),token });
         }).catch(err => {
-            res.status(500).send({ users: data, success: false, msg: notification.getUser_notification_message('User000'), err });
+            res.status(500).send({ users: data, success: false, response_message: notification.getUser_notification_message('User000'), err });
         })        
     })
     .catch(err => {
-      res.status(500).send({ users: {}, success: false, msg: notification.getUser_notification_message('User000'), err });
+      res.status(500).send({ users: {}, success: false, response_message: notification.getUser_notification_message('User000'), err });
     });
 }
 

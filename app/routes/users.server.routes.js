@@ -5,7 +5,7 @@ const { authenticate, authorizeRoles } = require("../helpers/authorizationHelper
 
 module.exports = function (app) {
     app.route('/api/user/add').post(authorizeRoles("ADMIN"),_userdetails.register);
-    app.route('/api/user/get/:id').get(authorizeRoles("ADMIN"),_userdetails.getuserdetails);
+    app.route('/api/user/get/:id').get(authorizeRoles("ADMIN","SELLER","BUYYER"),_userdetails.getuserdetails);
     app.route('/api/user/getall').get(authorizeRoles("ADMIN"),_userdetails.getallusers);
     app.route('/api/user/approve/:id').put(authorizeRoles("ADMIN"),_userdetails.approve);
 }
