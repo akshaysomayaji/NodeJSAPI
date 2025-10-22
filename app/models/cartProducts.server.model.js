@@ -40,11 +40,16 @@ module.exports = (sequelize, Sequelize) => {
         },
         paymentStatus: {
             type: Sequelize.ENUM('UNPAID', 'PAID'),
-            allowNull: false        
+            allowNull: false,
+            defaultValue:'UNPAID'
         },
         isActive: {
             type: Sequelize.BOOLEAN,
             defaultValue: true
+        },
+        cartId: {
+            type: Sequelize.UUID,
+            allowNull: false
         }
     });
     return cartProductsDetails;

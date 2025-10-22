@@ -1,7 +1,9 @@
-const { where,Op  } = require("sequelize");
+const { where, Op, Sequelize } = require("sequelize");
 const db = require("../../config/plsql");
 const users = db.userdetails;
 const productdetails = db.productDetails;
+const businessDetails = db.businessDetails;
+
 const admindashboardresponse = {
     buyyers: {
         totalcount: 0,
@@ -18,9 +20,9 @@ const admindashboardresponse = {
         activeusers: 0,
         newproductssubmitted: 0
     },
-    buyyers_recent_orders: {},
-    sellers_recent_orders: {},
-    sellers_unverified: {},
+    buyyers_recent_orders: [],
+    sellers_recent_orders: [],
+    sellers_unverified: [],
 }
 
 exports.getdashboardcontent = async function(req, res, next){
@@ -52,9 +54,11 @@ function getBuyyerDetails() {
 
 
 function getSellerDetails() {
-    users.count({ where: { userrole: 'SELLER', isActive: 'true' } }).then(a => {
+    users.count({ where: { userrole: 'SELLER' } }).then(a => {
+        console.log('sellers count '+ a);
         admindashboardresponse.sellers.totalcount = a;
     }).catch(err => {
+        console.log(err);
         admindashboardresponse.sellers.totalcount = 0;
     });
 
@@ -69,6 +73,16 @@ function getSellerDetails() {
     }).catch(err => {
         admindashboardresponse.sellers.kycpendingverification = 0;
     });
+
+    db.sequelize.query(`select u."userdetailid",b."businessName",u."emailid",c."categoryName",u."mobilenumber",u."isActive"
+				from "businessDetails" b inner join "userdetail" u on b."userId" = u."userdetailid"
+				inner join "cateogryDetails" c on b."businessCategoryId" = c."categoryId"
+				where u."isApproved" = false`).then(result => {
+                    console.log("result - " + result)
+                         admindashboardresponse.sellers_unverified = result[0];
+                     }, err => {
+                         admindashboardresponse.sellers_unverified = [];
+                     })
 }
 
 function getSellerManufacturerDetails() {

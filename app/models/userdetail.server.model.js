@@ -5,6 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             primaryKey: true,
             defaultValue: Sequelize.UUIDV4,
+
         },
         fullname: {
             type: Sequelize.STRING,
@@ -25,19 +26,12 @@ module.exports = (sequelize, Sequelize) => {
              defaultValue: false
         },
         userrole: {
-            type: Sequelize.ENUM('ADMIN', 'BUYER', 'SELLER'),
+            type: Sequelize.ENUM('ADMIN', 'BUYER', 'SELLER', 'MANUFACTURER'),
         },
         is_manufacturer: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
             allowNull: false,
-            validate: {
-                async isSellerOnly(value) {
-                    if (value === true && this.role !== 'SELLER') {
-                        throw new Error('Only SELLER can be a manufacturer');
-                    }
-                },
-            },
         },
         isApproved: {
             type: Sequelize.BOOLEAN,

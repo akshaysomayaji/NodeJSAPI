@@ -33,6 +33,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.ENUM('Pending', 'Success', 'Failed', 'Cancelled', 'Refunded','Processing'),
             defaultValue: 'Pending'
         },
+        cartStatus: {
+            type: Sequelize.ENUM('CHECKED_IN', 'CHECKED_OUT'),
+            defaultValue: 'CHECKED_IN'
+        },
         finalPrice:{
             allowNull: true,
             type: Sequelize.INTEGER,

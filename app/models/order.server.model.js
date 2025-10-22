@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const orderDetails = sequelize.define("orderDetails", {
-        orderId: {
+        orderSystemId: {
             type: Sequelize.UUID,
             primaryKey: true,
             allowNull: false,
@@ -16,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         totalPrice: {
             type: Sequelize.DECIMAL(12, 2),
-            allowNull: false
+            allowNull: true
         },
         discount: {
             type: Sequelize.DECIMAL(12, 2),
@@ -24,19 +24,19 @@ module.exports = (sequelize, Sequelize) => {
         },
         finalPrice: {
             type: Sequelize.DECIMAL(12, 2),
-            allowNull: false
+            allowNull: true
         },
         paymentStatus: {
             type: Sequelize.ENUM('UNPAID', 'PAID'),
-            defaultValue: 'PAID'        
+            defaultValue: 'UNPAID'        
         },
         address: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
         paymentMethod: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         }
     },{
         tableName: "orderDetails",
@@ -56,6 +56,6 @@ module.exports = (sequelize, Sequelize) => {
                 order.orderId = `ORD-${datePart}-${sequence}`;
             },
         },
-    }));
+    });
     return orderDetails;
 }

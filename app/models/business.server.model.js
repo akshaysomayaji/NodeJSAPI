@@ -9,17 +9,17 @@ const businessdetails = sequelize.define("businessDetails",{
     businessName: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: false
     },
     gstin:{
         type: Sequelize.STRING,
         allowNull: false,
-        unique:true
+        unique:false
     },
     pan:{
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: false
     },
     gstCertificateFile:{
         type: Sequelize.BLOB('long'), // 'tiny', 'medium', 'long'
@@ -40,7 +40,7 @@ const businessdetails = sequelize.define("businessDetails",{
     storeName: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: false
     },
     storeLocation:{
         type: Sequelize.STRING,
@@ -66,7 +66,7 @@ const businessdetails = sequelize.define("businessDetails",{
     },  
     isActive:{
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: true
     },
     businessStatus: {
         type: Sequelize.ENUM('Active', 'Inactive', 'Suspended'),

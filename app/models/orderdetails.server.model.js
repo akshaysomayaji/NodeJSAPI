@@ -1,13 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
     const orderProductDetails = sequelize.define("orderProductDetails", {
-        orderSystemId: {
+        orderProductId: {
             type: Sequelize.UUID,
             primaryKey: true,
             allowNull: false,
             defaultValue: Sequelize.UUIDV4
         },
         orderId: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
         },
         buyyerId: {
@@ -45,10 +45,15 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DECIMAL(12, 2),
             allowNull: false
         },
+        paymentStatus: {
+            type: Sequelize.ENUM('UNPAID', 'PAID'),
+            defaultValue: 'UNPAID'
+        },
         status: {
             type: Sequelize.ENUM('Ordered', 'Shipped', 'Delivered', 'Cancelled', 'Refunded', 'Failed', 'Completed',
                 'Returned','Return Requested'),
             allowNull: false,
+            defaultValue: 'Ordered'
         }
     });
     return orderProductDetails;

@@ -1,4 +1,5 @@
-var _products = require('../../app/controllers/products.server.controller'), addProduct = require("../controllers/addProduct");
+var _products = require('../../app/controllers/products.server.controller');
+//    addProduct = require("../controllers/addProduct");
 const { authenticate, authorizeRoles } = require("../helpers/authorizationHelper");
 
 module.exports = function (app) {

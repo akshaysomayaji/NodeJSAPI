@@ -122,76 +122,77 @@ exports.searchproduct = async function (req, res, next) {
     });;
 }
 
-//exports.addtocart = async function (req, res, next) 
-//{
-//    const finalPrice = (req.body.price * req.body.quantity) + req.body.gst - req.body.discount;
-//            const cartProductrequest = {
-//                userId: req.decoded.id,
-//                sellerId: req.body.sellerId,
-//                productId:req.body.productId,
-//                quantity: req.body.quantity,
-//                price: req.body.price,
-//                gst: req.body.gst,
-//                discount: req.body.discount,
-//                finalPrice: finalPrice
-//            }
-//            const cartRequest ={
-//                userId: req.decoded.id,
-//                totalAmount: finalPrice,
-//                discount: req.body.discount,
-//                shippingCharge: req.body.shippingCharge,
-//                finalPrice : finalPrice - req.body.discount + req.body.shippingCharge,
-//            }
-//    cartDetails.findOne({ where: { userId: req.decoded.id, isActive: true, paymentStatus : 'Pending' } }).then(res => {
-//        if (res != null) {
-//            cartProductDetails.find({ where :{ userId: req.decoded.id,productId : req.body.productId, , isActive: true}}).then(data => 
-//                {
-//                    if(data != null)
-//                    {
-//                        data.dataValues.quantity = data.dataValues.quantity + 1;
-//                        data.dataValues.price = req.body.price;
-//                        data.dataValues.totalPrice = data.dataValues.quantity * req.body.price;
-//                        res.dataValues.totalAmount = res.totalAmount+data.dataValues.price;
-//                        res.dataValues.finalPrice = res.totalAmount+res.shippingCharge-res.discount;
-//                        cartProductDetails.update(data.dataValues, { where: { productId: req.body.productId, userId: req.decoded.id } }).then(result => {
-//                        if(result != null)
-//                        {
-//                            cartDetails.update(res.dataValues, { where :{cartId:req.dataValues.cartId, userId: req.decoded.id}}).then(result =>{
-//                                return res.send({ data: result, success: true, response_message: "Product Added To Cart Successfully." });
-//                            }).catch(err=>{
-//                                res.status(500).send({ data: [], success: false, response_message: err.message });
-//                            })
-//                        }}).catch(err => {
-//                            res.status(500).send({ data: [], success: false, response_message: err.message });
-//                            });
-//                            } else {
-//                                cartProductrequest.cartId = req.dataValues.cartId;
-//                                cartProductDetails.create(cartProductrequest).then(result=>{
-//                                    return res.send({ data: result, success: true, response_message: "Product Added To Cart Successfully." });
-//                                }).catch(err=>{
-//                                    res.status(500).send({ data: [], success: false, response_message: err.message });
-//                                })
-//                            }).catch(err => {
-//                                res.status(500).send({ data: [], success: false, response_message: err.message });
-//                            });
-//                    }
-//            } else 
-//            {
-//                cartDetails.create(cartRequest).then(response => {
-//                cartProductrequest.cartId = response.dataValues.cartId;
-//                                cartProductDetails.create(cartProductrequest).then(result=>{
-//                                    return res.send({ data: result, success: true, response_message: "Product Added To Cart Successfully." });
-//                                }).catch(err=>{
-//                                    res.status(500).send({ data: [], success: false, response_message: err.message });
-//                                })
-//            }).catch(err => {
-//                res.status(500).send({ data: [], success: false, response_message: err.message });
-//            });
-//        }
-//    }).catch(err => {
-//        res.status(500).send({ data: [], success: false, response_message: err.message });
-//    });
-//}
+exports.addtocart = async function (req, res, next) 
+{
+    const finalPrice = (req.body.price * req.body.quantity) + req.body.gst - req.body.discount;
+            const cartProductrequest = {
+                userId: req.decoded.id,
+                sellerId: req.body.sellerId,
+                productId:req.body.productId,
+                quantity: req.body.quantity,
+                price: req.body.price,
+                gst: req.body.gst,
+                discount: req.body.discount,
+                finalPrice: finalPrice,
+                cartId : ''
+            }
+            const cartRequest ={
+                userId: req.decoded.id,
+                totalAmount: finalPrice,
+                discount: req.body.discount,
+                shippingCharge: req.body.shippingCharge,
+                finalPrice : finalPrice - req.body.discount + req.body.shippingCharge,
+            }
+
+    cartDetails.find({ where: { userId: req.decoded.id, cartStatus: 'CHECKED_IN', isActive: true } }).then(response => {
+        if (!response) {
+            const cartID = response.dataValues.cartId;
+            cartProductDetails.find({ where: { productId: req.body.productId, userId: req.decoded.id, isActive: true } }).then(result => {
+                if (result) {
+                    const data = result.dataValues;
+                    data.quantity = data.quantity + req.body.quantity;
+                    data.price = req.body.price;
+                    data.totalPrice = data.quantity * req.body.price;
+                    response.dataValues.totalAmount = res.totalAmount + data.dataValues.price;
+                    response.dataValues.finalPrice = res.totalAmount + res.shippingCharge - res.discount;
+                    cartProductDetails.update(data, { where: { productId: req.body.productId, userId: req.decoded.id, isActive: true } }).then(result1 => {
+                        if (result1) {
+                            return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
+                        }
+                    }).catch(err => {
+                        res.status(500).send({ data: [], success: false, response_message: err.message });
+                    })
+                } else {
+                    cartProductrequest.cartId = cartID;
+                    cartProductDetails.create(cartProductrequest).then(result2 => {
+                        if (result2) {
+                            return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
+                        }
+                    }).catch(err => {
+                        res.status(500).send({ data: [], success: false, response_message: err.message });
+                    })
+                }
+            }).catch(err => {
+                res.status(500).send({ data: [], success: false, response_message: err.message });
+            })
+        } else {
+            cartDetails.create(cartRequest).then(response => {
+                if (response) {
+                    cartProductrequest.cartId = response.dataValues.cartId;
+                    cartProductDetails.create(cartProductrequest).then(result3 => {
+                        if (result3) {
+                            return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
+                        }
+                    }).catch(err => {
+                        res.status(500).send({ data: [], success: false, response_message: err.message });
+                    })
+                }
+            }).catch(err => {
+                res.status(500).send({ data: [], success: false, response_message: err.message });
+            });
+        }
+    });
+}
 
 exports.updateproductstatus = async function (res, res, next) {
     productdetails.update({
