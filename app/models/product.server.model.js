@@ -26,6 +26,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: true
         },
+        gst: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
+        shippingCharge: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
         stockQuantity:{
             type: Sequelize.INTEGER,
             allowNull: true

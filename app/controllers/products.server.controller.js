@@ -3,7 +3,7 @@ const db = require("../../config/plsql");
 const productdetails = db.productDetails;
 const productImagedetails = db.productImagedetails;
 const producttagsdetails = db.productTags;
-const cartDetails = db.cartDetails;
+const cartdetails = db.cartDetails;
 const cartProductDetails = db.cartProductDetails;
 const tags = db.tags;
 exports.addProduct = async function (req, res, next) {
@@ -96,7 +96,8 @@ exports.getproductdetails = async function (req, res, next) {
     //if(req.decoded.isManufacutrer){
     //    condition = { where: { [Op.and]: [ { createdUser: req.decoded.id },{[Op.or]: [{ productName: req.body.productName },{sku: req.body.sku },{categoryId : req.body.categoryId},{lowStockAlert : req.body.lowStockAlert},{productStatus : req.body.productStatus}]}]}}
     //}
-    productdetails.findAll().then(data =>{
+    productdetails.findAll().then(data => {
+        console.log(data);
         return res.send({ data: data, success: true, response_message: "" });
     }).catch(err => {
         res.status(500).send({ data: [], success: false, response_message: err.message });
@@ -124,74 +125,96 @@ exports.searchproduct = async function (req, res, next) {
 
 exports.addtocart = async function (req, res, next) 
 {
-    const finalPrice = (req.body.price * req.body.quantity) + req.body.gst - req.body.discount;
+    console.log(req.body);
+    productdetails.findOne({ where: { productId: req.body.productId } }).then(productResponse => {
+        if (productResponse.dataValues) {
+            const productResult = productResponse.dataValues;
+           
+            const finalPrice = (productResult.productPrice * req.body.quantity) + productResult.gst - productResult.discountPrice;
+            console.log(finalPrice);
             const cartProductrequest = {
                 userId: req.decoded.id,
-                sellerId: req.body.sellerId,
-                productId:req.body.productId,
+                sellerId: productResult.createdUser,
+                productId: productResult.productId,
                 quantity: req.body.quantity,
-                price: req.body.price,
-                gst: req.body.gst,
-                discount: req.body.discount,
+                price: productResult.productPrice,
+                gst: 1,
+                discount: productResult.discountPrice,
                 finalPrice: finalPrice,
-                cartId : ''
+                cartId: ''
             }
-            const cartRequest ={
+            const cartRequest = {
                 userId: req.decoded.id,
                 totalAmount: finalPrice,
-                discount: req.body.discount,
-                shippingCharge: req.body.shippingCharge,
-                finalPrice : finalPrice - req.body.discount + req.body.shippingCharge,
+                discount: productResult.discountPrice,
+                shippingCharge: productResult.shippingCharge,
+                finalPrice: finalPrice - productResult.discountPrice + productResult.shippingCharge,
             }
+            console.log(cartProductrequest);
+            console.log(cartRequest);
 
-    cartDetails.find({ where: { userId: req.decoded.id, cartStatus: 'CHECKED_IN', isActive: true } }).then(response => {
-        if (!response) {
-            const cartID = response.dataValues.cartId;
-            cartProductDetails.find({ where: { productId: req.body.productId, userId: req.decoded.id, isActive: true } }).then(result => {
-                if (result) {
-                    const data = result.dataValues;
-                    data.quantity = data.quantity + req.body.quantity;
-                    data.price = req.body.price;
-                    data.totalPrice = data.quantity * req.body.price;
-                    response.dataValues.totalAmount = res.totalAmount + data.dataValues.price;
-                    response.dataValues.finalPrice = res.totalAmount + res.shippingCharge - res.discount;
-                    cartProductDetails.update(data, { where: { productId: req.body.productId, userId: req.decoded.id, isActive: true } }).then(result1 => {
-                        if (result1) {
-                            return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
+            cartdetails.findOne({ where: { userId: req.decoded.id, cartStatus: 'CHECKED_IN', isActive: true } }).then(response => {
+                
+                if (response) {
+                    const cartID = response.dataValues.cartId;
+                    console.log(cartID);
+                    cartProductDetails.findOne({ where: { cartId: cartID, productId: req.body.productId, userId: req.decoded.id, isActive: true } }).then(result => {
+                        console.log(result);
+                        if (result) {
+                            const data = result.dataValues;
+                            data.quantity = data.quantity + req.body.quantity;
+                            data.discount = productResult.discountPrice;
+                            data.price = productResult.productPrice;
+                            data.finalPrice = data.quantity * finalPrice;
+                            response.dataValues.totalAmount = data.finalPrice;
+                            response.dataValues.finalPrice = data.finalPrice + productResult.shippingCharge;
+                            cartProductDetails.update(data, { where: { cartId: cartID, productId: req.body.productId, userId: req.decoded.id, isActive: true } }).then(result1 => {
+                                if (result1) {
+                                    cartdetails.update(response.dataValues, { where: { userId: req.decoded.id, cartStatus: 'CHECKED_IN', isActive: true } }).then(result3 => {
+                                        if (result3) {
+                                            return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
+                                        }
+                                    }).catch(err => {
+                                        res.status(500).send({ data: [], success: false, response_message: err.message });
+                                    })                                    
+                                }
+                            }).catch(err => {
+                                res.status(500).send({ data: [], success: false, response_message: err.message });
+                            })
+                        } else {
+                            cartProductrequest.cartId = cartID;
+                            cartProductDetails.create(cartProductrequest).then(result2 => {
+                                if (result2) {
+                                    return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
+                                }
+                            }).catch(err => {
+                                res.status(500).send({ data: [], success: false, response_message: err.message });
+                            })
                         }
                     }).catch(err => {
                         res.status(500).send({ data: [], success: false, response_message: err.message });
                     })
                 } else {
-                    cartProductrequest.cartId = cartID;
-                    cartProductDetails.create(cartProductrequest).then(result2 => {
-                        if (result2) {
-                            return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
+                    cartdetails.create(cartRequest).then(response => {
+                        if (response) {
+                            cartProductrequest.cartId = response.dataValues.cartId;
+                            cartProductDetails.create(cartProductrequest).then(result3 => {
+                                if (result3) {
+                                    return res.send({ data: result3, success: true, response_message: "Product Added To Cart Successfully." });
+                                }
+                            }).catch(err => {
+                                res.status(500).send({ data: [], success: false, response_message: err.message });
+                            })
                         }
                     }).catch(err => {
+                        console.log(err);
                         res.status(500).send({ data: [], success: false, response_message: err.message });
-                    })
+                    });
                 }
-            }).catch(err => {
-                res.status(500).send({ data: [], success: false, response_message: err.message });
-            })
-        } else {
-            cartDetails.create(cartRequest).then(response => {
-                if (response) {
-                    cartProductrequest.cartId = response.dataValues.cartId;
-                    cartProductDetails.create(cartProductrequest).then(result3 => {
-                        if (result3) {
-                            return res.send({ data: result1, success: true, response_message: "Product Added To Cart Successfully." });
-                        }
-                    }).catch(err => {
-                        res.status(500).send({ data: [], success: false, response_message: err.message });
-                    })
-                }
-            }).catch(err => {
-                res.status(500).send({ data: [], success: false, response_message: err.message });
             });
         }
-    });
+    })
+    
 }
 
 exports.updateproductstatus = async function (res, res, next) {

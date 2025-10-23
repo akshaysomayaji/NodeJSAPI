@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         orderId: {
-            type: Sequelize.UUID,
+            type: Sequelize.STRING,
             allowNull: false
         },
         totalPrice: {
@@ -39,23 +39,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true
         }
     },{
-        tableName: "orderDetails",
-        timestamps: true,
-        hooks: {
-            beforeCreate: async (order, options) => {
-                // Generate custom ID
-                const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-                const count = await Order.count({
-                    where: Sequelize.where(
-                        Sequelize.fn("DATE", Sequelize.col("createdAt")),
-                        "=",
-                        Sequelize.fn("DATE", new Date())
-                    ),
-                });
-                const sequence = String(count + 1).padStart(4, "0");
-                order.orderId = `ORD-${datePart}-${sequence}`;
-            },
-        },
+        tableName: "orderDetails"
     });
     return orderDetails;
 }

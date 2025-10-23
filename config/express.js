@@ -68,5 +68,6 @@ module.exports = function () {
     require('../app/routes/business.server.routes.js')(app);
     require('../app/routes/maindashboard.server.routes.js')(app);
     require('../app/routes/product.server.routes')(app);
+    require('../app/routes/order.server.routes')(app);
     return app;
 };
